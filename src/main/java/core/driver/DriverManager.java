@@ -14,6 +14,7 @@ public class DriverManager {
     private static final Logger log =
             LoggerUtil.getLogger(DriverManager.class);
 
+    // Desktop WebDriver
     public static void initDriver() {
 
         log.info("Initializing WebDriver...");
@@ -25,6 +26,16 @@ public class DriverManager {
         driver.set(webDriver);
 
         log.info("WebDriver initialized successfully");
+    }
+
+    // Mobile AndroidDriver
+    public static void initMobileDriver() {
+        log.info("Initializing AndroidDriver...");
+
+        WebDriver androidDriver = AndroidDriverFactory.createAndroidDriver();
+        driver.set(androidDriver);
+
+        log.info("AndroidDriver initialized successfully");
     }
 
     public static WebDriver getDriver() {

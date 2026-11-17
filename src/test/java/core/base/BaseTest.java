@@ -4,12 +4,13 @@ import core.driver.DriverManager;
 import core.localization.MessageProvider;
 import core.localization.UrlProvider;
 import core.utils.ScreenshotUtil;
+import core.utils.AllureEnvironmentWriter;
+
 import org.openqa.selenium.Dimension;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
-import core.utils.AllureEnvironmentWriter;
 
 public class BaseTest {
 
@@ -20,64 +21,40 @@ public class BaseTest {
         System.setProperty("env", env);
         System.setProperty("browser", browser);
 
-        DriverManager.initDriver();
+        // Always start mobile driver
+        DriverManager.initMobileDriver();
+
         AllureEnvironmentWriter.writeEnvironment();
+
+        System.out.println("Mobile driver started");
+    }
+
+    protected void openUrl(String url) {
+        UrlProvider.initialize(url);
+        MessageProvider.initialize(url);
+
+        DriverManager.getDriver().get(url);
+    }
+
+    // Switch from mobile to desktop browser when needed
+    protected void startDesktopBrowser() {
+
+        // Close current mobile session
+        DriverManager.quitDriver();
+
+        // Start desktop browser
+        DriverManager.initDriver();
 
         String os = System.getProperty("os.name").toLowerCase();
 
         if (os.contains("win")) {
-
-            DriverManager.getDriver()
-                    .manage()
-                    .window()
-                    .maximize();
-
-            System.out.println("WINDOW MODE: MAXIMIZED (WINDOWS)");
-
+            DriverManager.getDriver().manage().window().maximize();
         } else {
-
-            DriverManager.getDriver()
-                    .manage()
-                    .window()
+            DriverManager.getDriver().manage().window()
                     .setSize(new Dimension(1920, 1080));
-
-            System.out.println("WINDOW MODE: 1920x1080 (LINUX)");
         }
 
-        System.out.println(
-                "WINDOW SIZE: "
-                        + DriverManager.getDriver()
-                        .manage()
-                        .window()
-                        .getSize()
-        );
-
-        System.out.println("Cookies before: "
-                + DriverManager.getDriver()
-                .manage()
-                .getCookies()
-                .size());
-
-        DriverManager.getDriver()
-                .manage()
-                .deleteAllCookies();
-
-        System.out.println("Cookies after: "
-                + DriverManager.getDriver()
-                .manage()
-                .getCookies()
-                .size());
-
-        System.out.println("Driver started");
-    }
-
-    protected void openUrl(String url) {
-
-        UrlProvider.initialize(url);
-
-        MessageProvider.initialize(url);
-
-        DriverManager.getDriver().get(url);
+        System.out.println("Desktop browser started");
     }
 
     @AfterMethod(alwaysRun = true)
@@ -86,30 +63,27 @@ public class BaseTest {
         String status;
 
         switch (result.getStatus()) {
-
             case ITestResult.FAILURE:
                 status = "FAILED";
                 break;
-
             case ITestResult.SUCCESS:
                 status = "PASSED";
                 break;
-
             case ITestResult.SKIP:
                 status = "SKIPPED";
                 break;
-
             default:
                 status = "UNKNOWN";
         }
 
-        String path = ScreenshotUtil.captureScreenshot(
-                result.getName() + "_" + status,
-                status
-        );
+        if (DriverManager.getDriver() != null) {
 
-        result.setAttribute("screenshotPath", path);
+            String path = ScreenshotUtil.captureScreenshot(
+                    result.getName() + "_" + status, status);
 
-        DriverManager.quitDriver();
+            result.setAttribute("screenshotPath", path);
+
+            DriverManager.quitDriver();
+        }
     }
 }

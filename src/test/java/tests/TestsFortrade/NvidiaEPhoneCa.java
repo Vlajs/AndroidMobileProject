@@ -92,8 +92,7 @@ public class NvidiaEPhoneCa extends BaseTest {
     public void checkCysecPercentagesTest(String regulation){
         ScreenshotUtil.setCustomName("Cysec percentages are displayed correctly " + regulation);
         Allure.step("Checked for Cysec percentages");
-        //Veljko should change locator
-        //fortradePage.assertText(fortradePage.dynamicCysecPercentages, TestData.percentagesCysec);
+        fortradePage.assertText(fortradePage.dynamicCysecPercentages, TestData.percentagesCysec);
         fortradePage.assertText(fortradePage.staticCysecPercentages, TestData.percentagesCysec);
     }
 
@@ -112,7 +111,7 @@ public class NvidiaEPhoneCa extends BaseTest {
         ScreenshotUtil.setCustomName("Demo account is successfully registered - " + regulation);
         fortradePage.registerDemoAccount(TestData.firstName,TestData.lastName,TestData.generateEmail(),countryCode,fortradePage.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
-        readyFortrade.clickUsePassBtn();
+        readyFortrade.clickUsePassBtn(regulation);
         readyFortrade.clickMenuBtn();
         readyFortrade.checkRegulation(regulation);
     }
@@ -545,7 +544,7 @@ public class NvidiaEPhoneCa extends BaseTest {
         Allure.step("Redirected to the the page url");
         fortradePage.registerDemoAccount(TestData.firstName, TestData.lastName, email, countryCode, fortradePage.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
-        readyFortrade.clickUsePassBtn();
+        readyFortrade.clickUsePassBtn(regulation);
         openUrl(TestData.yopmailUrl);
         YopmailPage yopmailPage = new YopmailPage();
         yopmailPage.findEmail(email);
@@ -572,7 +571,7 @@ public class NvidiaEPhoneCa extends BaseTest {
         openUrl(baseUrl + "&fts=sms-age-annual-saving-knowledge-plang:all");
         fortradePage.fillTheFormOnTheSecondStepWithWrongSmsCode(TestData.firstName,TestData.lastName,email,countryCode,fortradePage.selectPhoneNumber(regulation),
                 "25_34_age", "15000_50000_annual", "50000_100000_savings", "knowledge_of_trading_all_the_above","lang_EN",
-                "1", "1", "1", "1");
+                "1111");
         fortradePage.assertErrorMessageForWrongSmsCode();
     }
 
@@ -897,7 +896,7 @@ public class NvidiaEPhoneCa extends BaseTest {
         openUrl(baseUrl + "&fts=testq-testa");
         fortradePage.registerDemoAccount(TestData.firstName,TestData.lastName,TestData.generateEmail(),countryCode,fortradePage.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
-        readyFortrade.clickUsePassBtn();
+        readyFortrade.clickUsePassBtn(regulation);
         readyFortrade.clickMenuBtn();
         readyFortrade.checkRegulation(regulation);
     }
@@ -1093,6 +1092,7 @@ public class NvidiaEPhoneCa extends BaseTest {
         openUrl(baseUrl + "&userLang=" + expectedLanguage);
         fortradePage.registerDemoAccount(TestData.firstName, TestData.lastName, email, countryCode, fortradePage.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        readyFortrade.clickUsePassBtn(regulation);
         readyFortrade.assertDisplayedLanguage(expectedLanguage);
         crmPage.checkCrmData(email, TestData.fullName, regulation);
         crmPage.checkLanguageField(email, expectedLanguage.toLowerCase());
@@ -1108,6 +1108,7 @@ public class NvidiaEPhoneCa extends BaseTest {
         openUrl(baseUrl + "&userLang=FRA");
         fortradePage.registerDemoAccount(TestData.firstName, TestData.lastName, email, countryCode, fortradePage.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        readyFortrade.clickUsePassBtn(regulation);
         readyFortrade.assertDisplayedLanguage(defaultLanguage);
         crmPage.checkCrmData(email, TestData.fullName, regulation);
         crmPage.checkLanguageField(email, defaultLanguage.toLowerCase());

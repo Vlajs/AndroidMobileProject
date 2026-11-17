@@ -6,7 +6,10 @@ import core.config.ConfigReader;
 import core.enums.FirstStepField;
 import core.enums.SecondStepField;
 import core.localization.UrlProvider;
-import core.pages.*;
+import core.pages.BrokerViews;
+import core.pages.CrmPage;
+import core.pages.ReadyFortrade;
+import core.pages.YopmailPage;
 import core.utils.ScreenshotUtil;
 import core.waitsManagement.WaitUtil;
 import io.qameta.allure.Allure;
@@ -15,6 +18,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import testdata.TestData;
+
 import java.awt.*;
 import java.io.IOException;
 
@@ -22,7 +26,6 @@ public class Br1EnCyan extends BaseTest {
 
     private BrokerViews brokerViews;
     private ReadyFortrade readyFortrade;
-    private CrmPage crmPage;
     private String baseUrl;
 
     @Parameters({"tag"})
@@ -30,7 +33,6 @@ public class Br1EnCyan extends BaseTest {
     public void initPages(String tag){
         brokerViews = new BrokerViews();
         readyFortrade = new ReadyFortrade();
-        crmPage = new CrmPage();
         baseUrl = ConfigReader.getBaseUrl();
         baseUrl += tag;
         openUrl(baseUrl);
@@ -239,6 +241,8 @@ public class Br1EnCyan extends BaseTest {
         String email = TestData.generateEmail();
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
     }
 
@@ -249,6 +253,8 @@ public class Br1EnCyan extends BaseTest {
         String email = TestData.generateEmail();
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
     }
 
@@ -262,6 +268,8 @@ public class Br1EnCyan extends BaseTest {
         brokerViews.registerDemoAccountWithParameters(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation),
                 "25_34_age", "15000_50000_annual", "50000_100000_savings", "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkCrmTags();
     }
@@ -274,6 +282,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl);
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkDeviceValue();
     }
@@ -287,6 +297,7 @@ public class Br1EnCyan extends BaseTest {
         brokerViews.registerDemoAccount(TestData.firstName, TestData.lastName, email, countryCode, brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
         readyFortrade.clickUsePassBtn();
+        startDesktopBrowser();
         openUrl(TestData.yopmailUrl);
         YopmailPage yopmailPage = new YopmailPage();
         yopmailPage.findEmail(email);
@@ -312,7 +323,7 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=sms-age-annual-saving-knowledge-plang:all");
         brokerViews.fillTheFormOnTheSecondStepWithWrongSmsCode(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation),
                 "25_34_age", "15000_50000_annual", "50000_100000_savings", "knowledge_of_trading_all_the_above","lang_EN",
-                "1", "1", "1", "1");
+                "1111");
         brokerViews.assertErrorMessageForWrongSmsCode();
     }
 
@@ -370,6 +381,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=age");
         brokerViews.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation), "25_34_age", SecondStepField.AGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkLinkIdValue("25_34_age");
     }
@@ -383,6 +396,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=age");
         brokerViews.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation), "25_34_age", SecondStepField.AGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkSMSVerification("--");
     }
@@ -430,6 +445,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=annual");
         brokerViews.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation), "15000_50000_annual", SecondStepField.ANNUAL);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkLinkIdValue("15000_50000_annual");
     }
@@ -443,6 +460,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=annual");
         brokerViews.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation), "15000_50000_annual", SecondStepField.ANNUAL);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkSMSVerification("--");
     }
@@ -490,6 +509,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=saving");
         brokerViews.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation), "50000_100000_savings", SecondStepField.SAVING);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkLinkIdValue("50000_100000_savings");
     }
@@ -503,6 +524,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=saving");
         brokerViews.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation), "50000_100000_savings", SecondStepField.SAVING);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkSMSVerification("--");
     }
@@ -551,6 +574,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=knowledge");
         brokerViews.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation), "knowledge_of_trading_all_the_above", SecondStepField.KNOWLEDGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkLinkIdValue("knowledge_of_trading_all_the_above");
     }
@@ -564,6 +589,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=knowledge");
         brokerViews.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation), "knowledge_of_trading_all_the_above", SecondStepField.KNOWLEDGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkSMSVerification("--");
     }
@@ -611,6 +638,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=plang:all");
         brokerViews.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation), "lang_EN", SecondStepField.LANGUAGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkLinkIdValue("lang_EN");
 
@@ -625,6 +654,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&fts=plang:all");
         brokerViews.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode, brokerViews.selectPhoneNumber(regulation), "lang_EN", SecondStepField.LANGUAGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkSMSVerification("--");
     }
@@ -665,6 +696,8 @@ public class Br1EnCyan extends BaseTest {
                 brokerViews.selectPhoneNumber(regulation), "25_34_age", "50000_100000_annual", "50000_100000_savings",
                 "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -680,6 +713,8 @@ public class Br1EnCyan extends BaseTest {
                 brokerViews.selectPhoneNumber(regulation), "25_34_age", "15000_50000_annual", "50000_100000_savings",
                 "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -695,6 +730,8 @@ public class Br1EnCyan extends BaseTest {
                 brokerViews.selectPhoneNumber(regulation), "45_54_age", "15000_50000_annual", "100000_250000_savings",
                 "knowledge_of_trading_none","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Invalid");
     }
@@ -710,6 +747,8 @@ public class Br1EnCyan extends BaseTest {
                 brokerViews.selectPhoneNumber(regulation), "45_54_age", "15000_50000_annual", "100000_250000_savings",
                 "knowledge_of_trading_none","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Invalid");
     }
@@ -725,6 +764,8 @@ public class Br1EnCyan extends BaseTest {
                 brokerViews.selectPhoneNumber(regulation), "45_54_age", "15000_50000_annual", "100000_250000_savings",
                 "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email, TestData.fullName, regulation);
         crmPage.checkCustomTag("");
     }
@@ -740,6 +781,8 @@ public class Br1EnCyan extends BaseTest {
                 brokerViews.selectPhoneNumber(regulation), "45_54_age", "15000_50000_annual", "100000_250000_savings",
                 "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email, TestData.fullName, regulation);
         crmPage.checkCustomTag("");
     }
@@ -752,13 +795,11 @@ public class Br1EnCyan extends BaseTest {
         String email = TestData.generateEmail();
         Allure.step("redirected to the url");
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            openUrl(baseUrl + "&ftsquery=device-equals(1)");
-        }else{
-            openUrl(baseUrl + "&ftsquery=device-equals(2)");
-        }
+        openUrl(baseUrl + "&ftsquery=device-equals(5)");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -769,13 +810,11 @@ public class Br1EnCyan extends BaseTest {
         String email = TestData.generateEmail();
         Allure.step("redirected to the url");
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            openUrl(baseUrl + "&ftsquery=device(1)");
-        }else{
-            openUrl(baseUrl + "&ftsquery=device(2)");
-        }
+        openUrl(baseUrl + "&ftsquery=device(1)");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Invalid");
     }
@@ -789,6 +828,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&ftsquery=device-equals(4)");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("");
     }
@@ -803,8 +844,10 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&ftsquery=device-equals(0)");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
-        crmPage.checkCustomTag("Invalid");
+        crmPage.checkCustomTag("OutOfRange");
     }
 
     @Test(description = "TC 20.3. Verify that the Custom Tag in the CRM is empty")
@@ -818,6 +861,8 @@ public class Br1EnCyan extends BaseTest {
                 brokerViews.selectPhoneNumber(regulation), "45_54_age", "15000_50000_annual", "100000_250000_savings",
                 "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("");
     }
@@ -832,7 +877,10 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&userLang=" + expectedLanguage);
         brokerViews.registerDemoAccount(TestData.firstName, TestData.lastName, email, countryCode, brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        readyFortrade.clickUsePassBtn();
         readyFortrade.assertDisplayedLanguage(expectedLanguage);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email, TestData.fullName, regulation);
         crmPage.checkLanguageField(email, expectedLanguage.toLowerCase());
     }
@@ -847,7 +895,10 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&userLang=FRA");
         brokerViews.registerDemoAccount(TestData.firstName, TestData.lastName, email, countryCode, brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        readyFortrade.clickUsePassBtn();
         readyFortrade.assertDisplayedLanguage(defaultLanguage);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email, TestData.fullName, regulation);
         crmPage.checkLanguageField(email, defaultLanguage.toLowerCase());
     }
@@ -859,13 +910,11 @@ public class Br1EnCyan extends BaseTest {
         String email = TestData.generateEmail();
         Allure.step("redirected to the url");
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            openUrl(baseUrl + "&ftsquery=device-equals(1)&dummyP=1");
-        }else{
-            openUrl(baseUrl + "&ftsquery=device-equals(2)&dummyP=1");
-        }
+        openUrl(baseUrl + "&ftsquery=device-equals(5)&dummyP=1");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("DummyP");
     }
@@ -877,13 +926,11 @@ public class Br1EnCyan extends BaseTest {
         String email = TestData.generateEmail();
         Allure.step("redirected to the url");
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            openUrl(baseUrl + "&ftsquery=device-equals(1)&dummyP=0");
-        }else{
-            openUrl(baseUrl + "&ftsquery=device-equals(2)&dummyp=0");
-        }
+        openUrl(baseUrl + "&ftsquery=device-equals(5)&dummyP=0");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -895,13 +942,11 @@ public class Br1EnCyan extends BaseTest {
         String email = TestData.generateEmail();
         Allure.step("redirected to the url");
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            openUrl(baseUrl + "&ftsquery=device-equals(1)&dummyp=1");
-        } else{
-            openUrl(baseUrl + "&ftsquery=device-equals(2)&dummyp=1");
-        }
+        openUrl(baseUrl + "&ftsquery=device-equals(5)&dummyp=1");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -915,6 +960,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&Dummy=true");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -928,6 +975,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&Dummy=1");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -941,6 +990,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&Dummy=false");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("");
     }
@@ -954,6 +1005,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&Dummy=0");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("");
     }
@@ -967,6 +1020,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&tag1=1452789330");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkLinkIdValue(TestData.resultOfAnIPLValue);
     }
@@ -980,6 +1035,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&tag1=123abc");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkLinkIdValue("missingTag1");
     }
@@ -993,6 +1050,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&tag1=123456789");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkLinkIdValue("missingCID");
     }
@@ -1006,6 +1065,8 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl + "&tag1=930863512");
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkLinkIdValue("divByZero");
     }
@@ -1019,7 +1080,9 @@ public class Br1EnCyan extends BaseTest {
         openUrl(baseUrl);
         brokerViews.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,brokerViews.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
-        crmPage.checkLinkIdValue("None_usd");
+        crmPage.checkLinkIdValue("589_usd");
     }
 }

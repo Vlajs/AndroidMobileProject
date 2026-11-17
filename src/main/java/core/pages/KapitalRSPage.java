@@ -9,6 +9,7 @@ import core.localization.MessageKeys;
 import core.localization.MessageProvider;
 import core.localization.UrlProvider;
 import core.waitsManagement.WaitUtil;
+import io.appium.java_client.android.AndroidDriver;
 import io.qameta.allure.Step;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -69,7 +70,7 @@ public class KapitalRSPage extends BasePage {
     public WebElement emailErrorMsg;
 
     //Nekad se koristi klasa sa "phone-pair" na kraju, a nekad bez
-    @FindBy(xpath = "//div[@class='formPair error-wrapper phone-pair']/following-sibling::span[@class='errorMessage'][1]")
+    @FindBy(xpath = /*"//div[@class='formPair error-wrapper phone-pair']/following-sibling::span[@class='errorMessage'][1]"*/ "//div[contains(@class, 'formPair') and contains(@class, 'error-wrapper')]/following-sibling::span[@class='errorMessage'][1]")
     public WebElement phoneErrorMsg;
 
     @FindBy(xpath = "//label[@for='FirstName']/following-sibling::span[@class='errorMessage'][1]")
@@ -180,22 +181,28 @@ public class KapitalRSPage extends BasePage {
     @FindBy(xpath = "//a[contains(@href,'https://www.dfsa.ae/public-register/firms/fortrade-difc-limited')]")
     public WebElement footerDFSALink;
 
+    @FindBy(xpath = "//span[@class='smsErrorMessage']")
+    public WebElement errorMsgInvalidPhone;
+
     @FindBy(xpath = "//input[@id='Resend-Token-Btn']")
     public WebElement iDidntReceiveTheCodeLink;
 
     @FindBy(xpath = "//label[@name='SentAgainLabel']")
     public WebElement weSentYouTheCodeAgain;
 
-    @FindBy(xpath = "//div/input[@name='Token0']")
+    @FindBy(id = "Token")
+    public WebElement smsTokenField;
+
+    @FindBy(xpath = /*"//div/input[@name='Token0']"*/ "(//div[@class='tokenDigits']/span)[1]")
     public WebElement firstSmsTokenField;
 
-    @FindBy(xpath = "//div/input[@name='Token1']")
+    @FindBy(xpath = /*"//div/input[@name='Token1']"*/ "(//div[@class='tokenDigits']/span)[2]")
     public WebElement secondSmsTokenField;
 
-    @FindBy(xpath = "//div/input[@name='Token2']")
+    @FindBy(xpath = /*"//div/input[@name='Token2']"*/ "(//div[@class='tokenDigits']/span)[3]")
     public WebElement thirdSmsTokenField;
 
-    @FindBy(xpath = "//div/input[@name='Token3']")
+    @FindBy(xpath = /*"//div/input[@name='Token3']"*/ "(//div[@class='tokenDigits']/span)[4]")
     public WebElement fourthSmsTokenField;
 
     @FindBy(xpath = "//div/span[@class='smsErrorMessage']")
@@ -245,13 +252,13 @@ public class KapitalRSPage extends BasePage {
     }
 
     private FieldType detectCountryCodeType() {
-        if (ElementActions.isElementDisplayed(fixedCountryCode)) {
+        if (ElementActions.isElementDisplayedWithoutWait(fixedCountryCode)) {
             return FieldType.HIDDEN;
         }
-        if (ElementActions.isElementDisplayed(textCountryCode)) {
+        if (ElementActions.isElementDisplayedWithoutWait(textCountryCode)) {
             return FieldType.TEXT;
         }
-        if (ElementActions.isElementDisplayed(dropdownCountryCode)) {
+        if (ElementActions.isElementDisplayedWithoutWait(dropdownCountryCode)) {
             return FieldType.DROPDOWN;
         }
         return FieldType.UNKNOWN;
@@ -290,12 +297,24 @@ public class KapitalRSPage extends BasePage {
     }
 
     public void selectCountry(String country) {
+        String countryIso = switch (country) {
+            case "389" -> "MK";
+            case "1"   -> "CA";
+            case "44"  -> "GB";
+            case "357" -> "CY";
+            case "61"  -> "AU";
+            case "381" -> "RS";
+            case "971" -> "AE";
+            default    -> throw new IllegalArgumentException("Nepoznat dial code: " + country);
+        };
+        ElementActions.closeKeyboard();
+        ElementActions.scrollTo(dropdownCountryCode, "Country Dropdown");
         ElementActions.click(dropdownCountryCode, "Country Dropdown");
-        By countryLocator = By.xpath("//div/ul/li[@data-dial='" + country + "']");
-        WaitUtil.waitForVisible(countryLocator);
+        By countryLocator = By.xpath("//ul[@class='cps-list']/li[span[@class='cps-item-iso' and normalize-space()='" + countryIso + "'] and span[@class='cps-item-dial' and normalize-space()='+" + country + "']]/span[@class='cps-item-name']");
         WebElement countryElement = driver.findElement(countryLocator);
+        //ElementActions.scrollTo(countryElement, "Country Element");
         //((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", countryElement);
-        ElementActions.click(countryElement, "Country: " + country);
+        ElementActions.clickWithoutScroll(countryElement, "Country: " + country);
     }
 
     private WebElement getPhoneNumberField() {
@@ -325,10 +344,20 @@ public class KapitalRSPage extends BasePage {
     }
 
     public void clickGetStartedBtn() {
+
+        if (DriverManager.getDriver() instanceof AndroidDriver) {
+            ElementActions.closeKeyboard();
+        }
+
         ElementActions.click(submitBtn, "start trading button");
     }
 
     public void clickContinueBtn(){
+
+        if (DriverManager.getDriver() instanceof AndroidDriver) {
+            ElementActions.closeKeyboard();
+        }
+
         ElementActions.click(continueBtn,"next stage button");
     }
 
@@ -426,7 +455,7 @@ public class KapitalRSPage extends BasePage {
         clickGetStartedBtn();
     }
 
-    public void fillTheFormOnTheSecondStepWithWrongSmsCode(String firstNameData, String lastNameData, String emailAddress,
+    /*public void fillTheFormOnTheSecondStepWithWrongSmsCode(String firstNameData, String lastNameData, String emailAddress,
                                                            String countryCodeData, String phoneNumberData, String ageData,
                                                            String annualData, String savingData, String knowledgeData,
                                                            String languageData, String token0, String token1, String token2, String token3) {
@@ -438,13 +467,32 @@ public class KapitalRSPage extends BasePage {
         selectLanguage(languageData);
         enterTheSmsToken(token0, token1, token2, token3);
         clickGetStartedBtn();
+    }*/
+
+    public void fillTheFormOnTheSecondStepWithWrongSmsCode(String firstNameData, String lastNameData, String emailAddress,
+                                                           String countryCodeData, String phoneNumberData, String ageData,
+                                                           String annualData, String savingData, String knowledgeData,
+                                                           String languageData, String smsToken) {
+        goToSecondStep(firstNameData, lastNameData, emailAddress, countryCodeData, phoneNumberData);
+        selectAge(ageData);
+        selectAnnualIncome(annualData);
+        selectSaving(savingData);
+        selectKnowledge(knowledgeData);
+        selectLanguage(languageData);
+        enterTheSmsToken(smsToken);
+        clickGetStartedBtn();
     }
 
-    public void enterTheSmsToken(String token0, String token1, String token2, String token3) {
+
+    /*public void enterTheSmsToken(String token0, String token1, String token2, String token3) {
         ElementActions.type(firstSmsTokenField, token0, "first sms token field");
         ElementActions.type(secondSmsTokenField, token1, "second sms token field");
         ElementActions.type(thirdSmsTokenField, token2, "third sms token field");
         ElementActions.type(fourthSmsTokenField, token3, "fourth sms token field");
+    }*/
+
+    public void enterTheSmsToken(String smsToken) {
+        ElementActions.type(smsTokenField, smsToken, "sms token field");
     }
 
     public void assertErrMsgForAlreadyRegisteredAccount() {
@@ -543,9 +591,37 @@ public class KapitalRSPage extends BasePage {
         ElementActions.click(iirocLogo, "fortrade iiroc logo");
     }
 
-    public void assertURL(String url) {
+    /*public void assertURL(String url) {
         WaitUtil.waitForUrlContains(url);
         Assert.assertTrue(driver.getCurrentUrl().contains(url));
+    }*/
+
+    public void assertURL(String url) {
+
+        WaitUtil.getWait().until(driver ->
+                driver.getCurrentUrl().contains(url)
+                        || driver.getCurrentUrl().startsWith("chrome-native://pdf/link")
+        );
+
+        String currentUrl = driver.getCurrentUrl();
+
+        if (currentUrl.startsWith("chrome-native://pdf/link")) {
+
+            String encodedPdfUrl = currentUrl.substring(currentUrl.indexOf("url=") + 4);
+
+            String actualPdfUrl = URLDecoder.decode(
+                    encodedPdfUrl,
+                    StandardCharsets.UTF_8
+            );
+
+            Assert.assertTrue(
+                    actualPdfUrl.startsWith(url),
+                    "Expected URL: " + url + "\nActual URL: " + actualPdfUrl
+            );
+
+        } else {
+            Assert.assertTrue(currentUrl.contains(url));
+        }
     }
 
     public void assertText(WebElement element, String text){
@@ -560,18 +636,16 @@ public class KapitalRSPage extends BasePage {
     }
 
     public void checkLinksWithLeftClick(WebElement element, String elementName, String expectedUrl){
+
         WebDriver driver = DriverManager.getDriver();
         Capabilities caps = ((RemoteWebDriver) driver).getCapabilities();
         String browserName = caps.getBrowserName().toLowerCase();
 
+
         ElementActions.click(element, elementName);
         List<String> tabs = new ArrayList<>(driver.getWindowHandles());
         if (tabs.size() > 1){
-            if (browserName.equalsIgnoreCase("chrome")){
-                driver.switchTo().window(tabs.get(1));
-            } else {
-                driver.switchTo().window(tabs.get(1));
-            }
+            driver.switchTo().window(tabs.get(1));
         }
         WaitUtil.waitForPageLoad();
         assertURL(expectedUrl);
@@ -586,11 +660,7 @@ public class KapitalRSPage extends BasePage {
         ElementActions.rightClick(element, elementName);
         List<String> tabs = new ArrayList<>(driver.getWindowHandles());
         if (tabs.size() > 1){
-            if (browserName.equalsIgnoreCase("chrome")){
-                driver.switchTo().window(tabs.get(1));
-            } else {
-                driver.switchTo().window(tabs.get(1));
-            }
+            driver.switchTo().window(tabs.get(1));
         }
         WaitUtil.waitForPageLoad();
         assertURL(expectedUrl);
@@ -603,6 +673,10 @@ public class KapitalRSPage extends BasePage {
     }
 
     public void checkIDidntReceiveTheCodeLink(){
+        try {
+            WaitUtil.waitForVisible(errorMsgInvalidPhone);
+        } catch (TimeoutException ignored){
+        }
         ElementActions.click(iDidntReceiveTheCodeLink, "I didn't receive the code");
         Assert.assertEquals(ElementActions.getText(weSentYouTheCodeAgain, "weSentYouTheCodeAgainMessage"), MessageProvider.get(MessageKeys.RESENT_CODE_MESSAGE));
     }

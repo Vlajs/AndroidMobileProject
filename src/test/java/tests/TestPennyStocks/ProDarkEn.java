@@ -23,7 +23,6 @@ public class ProDarkEn extends BaseTest {
 
     private PennyStocks pennyStocks;
     private ReadyFortrade readyFortrade;
-    private CrmPage crmPage;
     private String baseUrl;
 
     @Parameters({"tag"})
@@ -31,7 +30,6 @@ public class ProDarkEn extends BaseTest {
     public void initPages(String tag){
         pennyStocks = new PennyStocks();
         readyFortrade = new ReadyFortrade();
-        crmPage = new CrmPage();
         baseUrl = ConfigReader.getBaseUrl();
         baseUrl += tag;
         openUrl(baseUrl);
@@ -240,6 +238,8 @@ public class ProDarkEn extends BaseTest {
         String email = TestData.generateEmail();
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
     }
 
@@ -250,6 +250,8 @@ public class ProDarkEn extends BaseTest {
         String email = TestData.generateEmail();
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
     }
 
@@ -263,6 +265,8 @@ public class ProDarkEn extends BaseTest {
         pennyStocks.registerDemoAccountWithParameters(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation),
                 "25_34_age", "15000_50000_annual", "50000_100000_savings", "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkCrmTags();
     }
@@ -275,6 +279,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl);
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkDeviceValue();
     }
@@ -288,6 +294,7 @@ public class ProDarkEn extends BaseTest {
         pennyStocks.registerDemoAccount(TestData.firstName, TestData.lastName, email, countryCode, pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
         readyFortrade.clickUsePassBtn();
+        startDesktopBrowser();
         openUrl(TestData.yopmailUrl);
         YopmailPage yopmailPage = new YopmailPage();
         yopmailPage.findEmail(email);
@@ -313,7 +320,7 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=sms-age-annual-saving-knowledge-plang:all");
         pennyStocks.fillTheFormOnTheSecondStepWithWrongSmsCode(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation),
                 "25_34_age", "15000_50000_annual", "50000_100000_savings", "knowledge_of_trading_all_the_above","lang_EN",
-                "1", "1", "1", "1");
+                "1111");
         pennyStocks.assertErrorMessageForWrongSmsCode();
     }
 
@@ -371,6 +378,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=age");
         pennyStocks.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation), "25_34_age", SecondStepField.AGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkLinkIdValue("25_34_age");
     }
@@ -384,6 +393,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=age");
         pennyStocks.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation), "25_34_age", SecondStepField.AGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkSMSVerification("--");
     }
@@ -431,6 +442,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=annual");
         pennyStocks.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation), "15000_50000_annual", SecondStepField.ANNUAL);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkLinkIdValue("15000_50000_annual");
     }
@@ -444,6 +457,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=annual");
         pennyStocks.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation), "15000_50000_annual", SecondStepField.ANNUAL);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkSMSVerification("--");
     }
@@ -491,6 +506,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=saving");
         pennyStocks.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation), "50000_100000_savings", SecondStepField.SAVING);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkLinkIdValue("50000_100000_savings");
     }
@@ -504,6 +521,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=saving");
         pennyStocks.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation), "50000_100000_savings", SecondStepField.SAVING);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkSMSVerification("--");
     }
@@ -552,6 +571,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=knowledge");
         pennyStocks.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation), "knowledge_of_trading_all_the_above", SecondStepField.KNOWLEDGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkLinkIdValue("knowledge_of_trading_all_the_above");
     }
@@ -565,6 +586,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=knowledge");
         pennyStocks.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation), "knowledge_of_trading_all_the_above", SecondStepField.KNOWLEDGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkSMSVerification("--");
     }
@@ -612,6 +635,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=plang:all");
         pennyStocks.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation), "lang_EN", SecondStepField.LANGUAGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkLinkIdValue("lang_EN");
 
@@ -626,6 +651,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&fts=plang:all");
         pennyStocks.registerDemoAccountWithParameter(TestData.firstName,TestData.lastName,email,countryCode, pennyStocks.selectPhoneNumber(regulation), "lang_EN", SecondStepField.LANGUAGE);
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.firstName + " " + TestData.lastName,regulation);
         crmPage.checkSMSVerification("--");
     }
@@ -666,6 +693,8 @@ public class ProDarkEn extends BaseTest {
                 pennyStocks.selectPhoneNumber(regulation), "25_34_age", "50000_100000_annual", "50000_100000_savings",
                 "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -681,6 +710,8 @@ public class ProDarkEn extends BaseTest {
                 pennyStocks.selectPhoneNumber(regulation), "25_34_age", "15000_50000_annual", "50000_100000_savings",
                 "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -696,6 +727,8 @@ public class ProDarkEn extends BaseTest {
                 pennyStocks.selectPhoneNumber(regulation), "45_54_age", "15000_50000_annual", "100000_250000_savings",
                 "knowledge_of_trading_none","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Invalid");
     }
@@ -711,6 +744,8 @@ public class ProDarkEn extends BaseTest {
                 pennyStocks.selectPhoneNumber(regulation), "45_54_age", "15000_50000_annual", "100000_250000_savings",
                 "knowledge_of_trading_none","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Invalid");
     }
@@ -726,6 +761,8 @@ public class ProDarkEn extends BaseTest {
                 pennyStocks.selectPhoneNumber(regulation), "45_54_age", "15000_50000_annual", "100000_250000_savings",
                 "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email, TestData.fullName, regulation);
         crmPage.checkCustomTag("");
     }
@@ -741,6 +778,8 @@ public class ProDarkEn extends BaseTest {
                 pennyStocks.selectPhoneNumber(regulation), "45_54_age", "15000_50000_annual", "100000_250000_savings",
                 "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email, TestData.fullName, regulation);
         crmPage.checkCustomTag("");
     }
@@ -753,13 +792,11 @@ public class ProDarkEn extends BaseTest {
         String email = TestData.generateEmail();
         Allure.step("redirected to the url");
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            openUrl(baseUrl + "&ftsquery=device-equals(1)");
-        }else{
-            openUrl(baseUrl + "&ftsquery=device-equals(2)");
-        }
+        openUrl(baseUrl + "&ftsquery=device-equals(5)");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -770,13 +807,11 @@ public class ProDarkEn extends BaseTest {
         String email = TestData.generateEmail();
         Allure.step("redirected to the url");
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            openUrl(baseUrl + "&ftsquery=device(1)");
-        }else{
-            openUrl(baseUrl + "&ftsquery=device(2)");
-        }
+        openUrl(baseUrl + "&ftsquery=device(1)");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Invalid");
     }
@@ -790,6 +825,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&ftsquery=device-equals(4)");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("");
     }
@@ -804,8 +841,10 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&ftsquery=device-equals(0)");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
-        crmPage.checkCustomTag("Invalid");
+        crmPage.checkCustomTag("OutOfRange");
     }
 
     @Test(description = "TC 20.3. Verify that the Custom Tag in the CRM is empty")
@@ -819,6 +858,8 @@ public class ProDarkEn extends BaseTest {
                 pennyStocks.selectPhoneNumber(regulation), "45_54_age", "15000_50000_annual", "100000_250000_savings",
                 "knowledge_of_trading_all_the_above","lang_EN");
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("");
     }
@@ -833,7 +874,10 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&userLang=" + expectedLanguage);
         pennyStocks.registerDemoAccount(TestData.firstName, TestData.lastName, email, countryCode, pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        readyFortrade.clickUsePassBtn();
         readyFortrade.assertDisplayedLanguage(expectedLanguage);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email, TestData.fullName, regulation);
         crmPage.checkLanguageField(email, expectedLanguage.toLowerCase());
     }
@@ -848,7 +892,10 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&userLang=FRA");
         pennyStocks.registerDemoAccount(TestData.firstName, TestData.lastName, email, countryCode, pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        readyFortrade.clickUsePassBtn();
         readyFortrade.assertDisplayedLanguage(defaultLanguage);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email, TestData.fullName, regulation);
         crmPage.checkLanguageField(email, defaultLanguage.toLowerCase());
     }
@@ -860,13 +907,11 @@ public class ProDarkEn extends BaseTest {
         String email = TestData.generateEmail();
         Allure.step("redirected to the url");
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            openUrl(baseUrl + "&ftsquery=device-equals(1)&dummyP=1");
-        }else{
-            openUrl(baseUrl + "&ftsquery=device-equals(2)&dummyP=1");
-        }
+        openUrl(baseUrl + "&ftsquery=device-equals(5)&dummyP=1");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("DummyP");
     }
@@ -878,13 +923,11 @@ public class ProDarkEn extends BaseTest {
         String email = TestData.generateEmail();
         Allure.step("redirected to the url");
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            openUrl(baseUrl + "&ftsquery=device-equals(1)&dummyP=0");
-        }else{
-            openUrl(baseUrl + "&ftsquery=device-equals(2)&dummyp=0");
-        }
+        openUrl(baseUrl + "&ftsquery=device-equals(5)&dummyP=0");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -896,13 +939,11 @@ public class ProDarkEn extends BaseTest {
         String email = TestData.generateEmail();
         Allure.step("redirected to the url");
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            openUrl(baseUrl + "&ftsquery=device-equals(1)&dummyp=1");
-        } else{
-            openUrl(baseUrl + "&ftsquery=device-equals(2)&dummyp=1");
-        }
+        openUrl(baseUrl + "&ftsquery=device-equals(5)&dummyp=1");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -916,6 +957,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&Dummy=true");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -929,6 +972,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&Dummy=1");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("Dummy");
     }
@@ -942,6 +987,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&Dummy=false");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("");
     }
@@ -955,6 +1002,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&Dummy=0");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkCustomTag("");
     }
@@ -968,6 +1017,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&tag1=1452789330");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkLinkIdValue(TestData.resultOfAnIPLValue);
     }
@@ -981,6 +1032,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&tag1=123abc");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkLinkIdValue("missingTag1");
     }
@@ -994,6 +1047,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&tag1=123456789");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkLinkIdValue("missingCID");
     }
@@ -1007,6 +1062,8 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl + "&tag1=930863512");
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
         crmPage.checkLinkIdValue("divByZero");
     }
@@ -1020,7 +1077,9 @@ public class ProDarkEn extends BaseTest {
         openUrl(baseUrl);
         pennyStocks.registerDemoAccount(TestData.firstName,TestData.lastName,email,countryCode,pennyStocks.selectPhoneNumber(regulation));
         readyFortrade.assertURL(TestData.appUrl);
+        startDesktopBrowser();
+        CrmPage crmPage = new CrmPage();
         crmPage.checkCrmData(email,TestData.fullName,regulation);
-        crmPage.checkLinkIdValue("None_usd");
+        crmPage.checkLinkIdValue("589_usd");
     }
 }

@@ -17,10 +17,20 @@
         <allure.version>2.24.0</allure.version>
 
         <env>production</env>
-        <browser>chrome</browser>
+        <browser>edge</browser>
+
+        <!-- podrazumevani TestNG fajl, može da se pregazi sa -DsuiteXmlFile=... -->
+        <suiteXmlFile>Suites/TestNgAllPages.xml</suiteXmlFile>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>io.appium</groupId>
+            <artifactId>java-client</artifactId>
+            <version>10.0.0</version>
+        </dependency>
+
         <!-- Selenium (Selenium Manager INCLUDED) -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -108,7 +118,7 @@
 
                     <!-- TestNG file -->
                     <suiteXmlFiles>
-                        <suiteXmlFile>Suites/TestNgAllPages.xml</suiteXmlFile>
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
                     </suiteXmlFiles>
 
                     <!-- Jenkins parameter passing -->

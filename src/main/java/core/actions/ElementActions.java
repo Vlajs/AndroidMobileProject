@@ -3,21 +3,23 @@ package core.actions;
 import core.driver.DriverManager;
 import core.utils.LoggerUtil;
 import core.waitsManagement.WaitUtil;
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.AndroidDriver;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
+import java.time.Duration;
 
 
 public class ElementActions {
 
     private static final Logger log =
             LoggerUtil.getLogger(ElementActions.class);
-
-    private static final int MAX_RETRY = 2;
 
     private static WebDriver driver() {
         return DriverManager.getDriver();
@@ -32,46 +34,36 @@ public class ElementActions {
     @Step("Click element: {elementName}")
     public static void click(WebElement element, String elementName) {
 
-        int attempts = 0;
+        WaitUtil.waitForVisible(element);
+        WaitUtil.waitForClickable(element);
 
-        while (attempts <= MAX_RETRY) {
+        scrollTo(element, elementName);
 
-            try {
+        WaitUtil.waitForVisible(element);
+        WaitUtil.waitForClickable(element);
 
-                WaitUtil.waitForVisible(element);
-                WaitUtil.waitForClickable(element);
+        element.click();
 
-                element.click();
+        log.info("Clicked element: {}", elementName);
+        Allure.step("Clicked " + elementName);
+    }
 
-                log.info("Clicked element: {}", elementName);
+    @Step("Click element: {elementName}")
+    public static void clickWithoutScroll(WebElement element, String elementName) {
 
-                Allure.step("Clicked " + elementName);
+        WaitUtil.waitForVisible(element);
+        WaitUtil.waitForClickable(element);
 
-                return;
+        element.click();
 
-            } catch (StaleElementReferenceException e) {
-
-                log.warn("Stale element for '{}', retrying...", elementName);
-
-            } catch (ElementNotInteractableException e) {
-
-                log.warn("Element not interactable '{}', retrying...", elementName);
-
-            } catch (WebDriverException e) {
-
-                log.warn("WebDriver exception on '{}', retrying...", elementName);
-            }
-
-            sleep(500);
-            attempts++;
-        }
-
-        log.warn("Fallback to JS click for element: {}", elementName);
-        jsClick(element, elementName);
+        log.info("Clicked element: {}", elementName);
+        Allure.step("Clicked " + elementName);
     }
 
     @Step("JS click on element: {elementName}")
     public static void jsClick(WebElement element, String elementName) {
+
+        scrollTo(element, elementName);
 
         WaitUtil.waitForVisible(element);
         WaitUtil.waitForClickable(element);
@@ -91,7 +83,10 @@ public class ElementActions {
                             String text,
                             String elementName) {
 
+        scrollTo(element, elementName);
+
         WaitUtil.waitForVisible(element);
+        WaitUtil.waitForClickable(element);
 
         element.clear();
         element.sendKeys(text);
@@ -121,13 +116,15 @@ public class ElementActions {
     @Step("Get text from {elementName}")
     public static String getText(By by, String elementName) {
 
+        WaitUtil.waitForVisible(by);
+
         String text = driver().findElement(by).getText();
 
         log.info("Retrieved text from {} : {}", elementName, text);
 
         Allure.step("Get text from " + elementName);
 
-        return driver().findElement(by).getText();
+        return text;
     }
 
     /* ================= DROPDOWN ================= */
@@ -136,6 +133,8 @@ public class ElementActions {
     public static void selectByText(WebElement element,
                                     String text,
                                     String elementName) {
+
+        scrollTo(element, elementName);
 
         WaitUtil.waitForVisible(element);
 
@@ -153,6 +152,8 @@ public class ElementActions {
     public static void selectByValue(WebElement element,
                                      String value,
                                      String elementName) {
+
+        scrollTo(element, elementName);
 
         WaitUtil.waitForVisible(element);
 
@@ -179,6 +180,9 @@ public class ElementActions {
     public static void doubleClick(WebElement element,
                                    String elementName) {
 
+        scrollTo(element, elementName);
+
+        WaitUtil.waitForVisible(element);
         WaitUtil.waitForClickable(element);
 
         actions()
@@ -194,9 +198,9 @@ public class ElementActions {
     public static void rightClick(WebElement element,
                                   String elementName) {
 
-        WaitUtil.waitForClickable(element);
-
         scrollTo(element, elementName);
+
+        WaitUtil.waitForClickable(element);
 
         String href = getAttributeValue(element, "href");
 
@@ -239,9 +243,11 @@ public class ElementActions {
 
     /* ================= SCROLL ================= */
 
-    @Step("Scroll to element: {elementName}")
+    /*@Step("Scroll to element: {elementName}")
     public static void scrollTo(WebElement element,
                                 String elementName) {
+
+        WaitUtil.threadSleep(5000);
 
         JavascriptExecutor js = (JavascriptExecutor) driver();
 
@@ -253,6 +259,30 @@ public class ElementActions {
 
         log.info("Scrolled to element {}", elementName);
 
+        Allure.step("Scrolled to " + elementName);
+    }*/
+
+    @Step("Scroll to element: {elementName}")
+    public static void scrollTo(WebElement element, String elementName) {
+
+        WaitUtil.waitForVisible(element);
+        WaitUtil.waitForClickable(element);
+
+        JavascriptExecutor js = (JavascriptExecutor) driver();
+
+        js.executeScript(
+                "arguments[0].scrollIntoView({block: 'center', inline: 'nearest', behavior: 'instant'});",
+                element
+        );
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+
+        log.info("Scrolled to element {}", elementName);
         Allure.step("Scrolled to " + elementName);
     }
 
@@ -334,11 +364,29 @@ public class ElementActions {
         return value;
     }
 
-    public static boolean isElementDisplayed(WebElement element) {
+    public static boolean isElementDisplayedWithoutWait(WebElement element) {
+
+        WebDriver driver = DriverManager.getDriver();
+
         try {
+            driver.manage().timeouts().implicitlyWait(Duration.ZERO);
             return element.isDisplayed();
+
         } catch (NoSuchElementException | StaleElementReferenceException e) {
             return false;
+
+        } finally {
+            driver.manage().timeouts()
+                    .implicitlyWait(Duration.ofSeconds(10));
+        }
+    }
+
+    public static void closeKeyboard() {
+        try {
+            ((AndroidDriver) DriverManager.getDriver()).hideKeyboard();
+            log.info("Mobile keyboard closed successfully");
+        } catch (Exception e) {
+            log.warn("Could not close mobile keyboard: {}", e.getMessage());
         }
     }
 }

@@ -132,4 +132,12 @@ public class WaitUtil {
                 .until(driver ->
                         expectedValue.equals(element.getCssValue(propertyName)));
     }
+
+    public static void waitForFrameAndSwitch(WebElement frameElement, int timeoutSeconds) {
+        getWait(timeoutSeconds).until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameElement));
+    }
+
+    public static void switchToDefaultContent() {
+        DriverManager.getDriver().switchTo().defaultContent();
+    }
 }

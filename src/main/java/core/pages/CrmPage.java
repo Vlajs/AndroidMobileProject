@@ -122,10 +122,6 @@ public class CrmPage extends BasePage {
         WaitUtil.waitForPageLoad();
     }
 
-
-
-
-
     public void loopForTagsCrm() {
         String number = "1434";
         String[] tags = {"lv_tag", "lv_tag1", "lv_googleid", "lv_tlid",
@@ -220,11 +216,12 @@ public class CrmPage extends BasePage {
         String linkIdVal = getText(linkId, "Link ID field from the CRM");
         System.out.println("Link ID field value from the CRM " + linkIdVal);
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
+        Assert.assertTrue(linkIdVal.contains("M_android"));
+        /*if(os.contains("win")){
             Assert.assertTrue(linkIdVal.contains("PC_windows"));
         }else {
             Assert.assertTrue(linkIdVal.contains("PC_Other"));
-        }
+        }*/
     }
 
     public void assertBorderColorInCRM(String regulation) {

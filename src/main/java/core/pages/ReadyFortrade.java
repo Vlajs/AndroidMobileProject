@@ -32,8 +32,28 @@ public class ReadyFortrade extends BasePage {
     @FindBy(xpath = "//div[@class='exitButton']")
     protected WebElement iAmNotSerbianRes;
 
+    @FindBy(xpath = "//input[@class='Submit-Submit']")
+    protected WebElement submitIirocContent;
+
+    @FindBy(xpath = "//iframe[@id='myWidgetIframe']")
+    protected WebElement widgetIirocContent;
+
     public void clickUsePassBtn(){
         ElementActions.click(btnUsePass,"Use password button");
+    }
+
+    public void clickUsePassBtn(String regulation){
+        ElementActions.click(btnUsePass,"Use password button");
+
+        if ("iiroc".equalsIgnoreCase(regulation)) {
+            submitIirocContent();   // za IIROC widget MORA da se pojavi, inače test pada
+        }
+    }
+
+    public  void submitIirocContent(){
+        driver.switchTo().frame(widgetIirocContent);
+        ElementActions.clickWithoutScroll(submitIirocContent, "iiroc submit content button");
+        driver.switchTo().defaultContent();
     }
 
     public void clickMenuBtn(){
@@ -75,10 +95,12 @@ public class ReadyFortrade extends BasePage {
 
     public void assertURL(String url) {
         WaitUtil.getWait(45).until(ExpectedConditions.urlContains(url));
+        //ElementActions.click(btnUsePass, "use password");
         Assert.assertTrue(driver.getCurrentUrl().contains(url));
     }
 
     public void assertDisplayedLanguage(String language){
+
         ElementActions.click(btnMenu, "menu btn");
         ElementActions.click(settingBtn, "settings btn");
         ElementActions.click(languageBtn, "language btn");
